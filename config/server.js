@@ -1,23 +1,20 @@
-let express = require('express');
-let expressSession = require('express-session');
-let body_parser = require('body-parser');
+const express = require("express");
+const expressSession = require("express-session");
+const body_parser = require("body-parser");
+const app = express();
 
+const port = process.env.PORT || 3000;
 
-let app = express();
+app.use(
+	expressSession({
+		secret: "Teste",
+		resave: false,
+		saveUninitialized: false,
+	})
+);
 
-let port = process.env.PORT || 3000;
-
+app.listen(port, () => console.log(`Servidor rodando na porta ${port}`));
 app.use(express.json());
-app.use(body_parser.urlencoded({extended:true}));
-
-app.use(expressSession({
-    secret: 'api_peticoes',
-    resave: false,
-    saveUninitialized: false
-}));
-
-app.listen(port, function(){
-    console.log("Runnning at: ", port);
-});
+app.use(body_parser.urlencoded({ extended: true }));
 
 module.exports = app;

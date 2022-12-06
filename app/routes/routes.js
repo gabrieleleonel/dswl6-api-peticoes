@@ -1,48 +1,48 @@
-const { obtemPeticoes, obtemPeticao, adicionaPeticao, alteraPeticao, deletaPeticao, assinarPeticao } = require("../controllers/peticoes");
+const Peticoes = require("../controllers/peticoes");
+const Usuarios = require("../controllers/usuarios");
 
-//O sistema deve possibilitar inclusão, alteração, deleção e consulta de petições
+/***
+ * @description O sistema deve possibilitar inclusão, alteração, deleção e consulta de petições.
+ */
+
 module.exports = {
-	//O sistema deve possibilitar consulta de petições
-	//Qualquer usuário pode ver as petições
 	obtemPeticoes: (app) => {
-		app.get("/api/peticoes", (req, res) => {
-			obtemPeticoes(app, req, res);
-		});
+		app.get("/api/peticoes", Peticoes.obtemPeticoes);
 	},
+
 	obtemPeticao: (app) => {
-		app.get("/api/peticao/:id", (req, res) => {
-			obtemPeticao(app, req, res);
-		});
+		app.get("/api/peticao/:id", Peticoes.obtemPeticao);
 	},
 
-	//O sistema deve possibilitar inclusão
-	//Somente usuário autenticados podem criar petições
 	adicionaPeticao: (app) => {
-		app.post("/api/peticao", (req, res) => {
-			adicionaPeticao(app, req, res);
-		});
+		app.post("/api/peticao", Usuarios.verifyJWT, Peticoes.adicionaPeticao);
 	},
 
-	//O sistema deve possibilitar alteração
-	//Somente quem pode alterar petições é o usuário que criou
 	alteraPeticao: (app) => {
-		app.put("/api/peticao/:id", (req, res) => {
-			alteraPeticao(app, req, res);
-		});
+		app.put("/api/peticao/:id", Usuarios.verifyJWT, Peticoes.alteraPeticao);
 	},
 
-	//O sistema deve possibilitar deleção
-	//Somente quem pode excluir petições é o usuário que criou
 	deletaPeticao: (app) => {
-		app.delete("/api/peticao/:id", (req, res) => {
-			deletaPeticao(app, req, res);
-		});
+		app.delete("/api/peticao/:id", Usuarios.verifyJWT, Peticoes.deletaPeticao);
 	},
 
-	//Somente usuário autenticados podem assinar petições
 	assinarPeticao: (app) => {
-		app.put("/api/peticao/:id/assinar", (req, res) => {
-			assinarPeticao(app, req, res);
-		});
+		app.put("/api/peticao/:id/assinar", Usuarios.verifyJWT, Peticoes.assinarPeticao);
+	},
+
+	login: (app) => {
+		app.post("/api/login", Usuarios.getUsuarioByUsuarioSenha);
+	},
+
+	logout: (app) => {
+		app.post("/api/logout", Usuarios.logout);
+	},
+
+	adicionaUsuario: (app) => {
+		app.post("/api/usuario", Usuarios.adicionaUsuario);
+	},
+
+	alteraUsuarios: (app) => {
+		app.put("/api/usuario/:id", Usuarios.verifyJWT, Usuarios.alteraUsuarios);
 	},
 };
