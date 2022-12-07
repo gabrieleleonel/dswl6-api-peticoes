@@ -20,6 +20,7 @@ module.exports = class UsuariosModel {
 		console.log(`[getusuariobyusuariosenha]usuario:${user}`);
 		try {
 			const cursor = await client.db("dsw").collection("usuarios").find({ usuario: user, senha: senha });
+			console.log(cursor);
 			return await cursor.toArray();
 		} catch (error) {
 			console.log(`[getusuariobyusuariosenha] ${error}`);
@@ -38,14 +39,14 @@ module.exports = class UsuariosModel {
 		}
 	}
 
-	static async adicionaUsuario(peticaoData) {
-		console.log(`[Usuario Model - Add Usuario] ${peticaoData}`);
+	static async adicionaUsuario(data) {
+		console.log(`[Usuario Model - Add Usuario] ${data}`);
 		try {
 			const newUsuario = {
-				nome: peticaoData.nome,
-				usuario: peticaoData.usuario,
-				senha: peticaoData.senha,
-				peticaoData_de_criacao: new Date(),
+				nome: data.nome,
+				usuario: data.usuario,
+				senha: data.senha,
+				usuarioDataCriacao: new Date(),
 			};
 			const addedUsuario = await client.db("dsw").collection("usuarios").insertOne(newUsuario);
 			console.log(`New usuario inserted with the following id ${addedUsuario.insertedId}`);
@@ -55,13 +56,13 @@ module.exports = class UsuariosModel {
 			return error;
 		}
 	}
-	static async alteraUsuarios(id, peticaoData) {
-		console.log(`[Usuario Model - Alter Usuario] ${peticaoData}`);
+	static async alteraUsuarios(id, data) {
+		console.log(`[Usuario Model - Alter Usuario] ${data}`);
 		try {
 			const usuario = {
-				nome: peticaoData.nome,
-				usuario: peticaoData.usuario,
-				senha: peticaoData.senha,
+				nome: data.nome,
+				usuario: data.usuario,
+				senha: data.senha,
 				dataAlteracao: new Date(),
 			};
 			const updateUsuario = await client

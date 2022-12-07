@@ -2,7 +2,7 @@ const usuarios = require("../model/usuarios");
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 
-const secret_key_jwt = "shhhhh";
+const secret_key_jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzOGZkOTkxNzk5ZWYwMzkwMzUzODk2ZCIsImlhdCI6MTY3MDM3MjY5OCwiZXhwIjoxNjcwMzc2Mjk4fQ.tvSG3dCjRcYIXSLaDERZRNtoka5aKX_ZM2bC5scnPPA";
 
 const JoiValidations = Joi.object().keys({
 	nome: Joi.string().required().min(1).max(200),
@@ -13,6 +13,7 @@ const JoiValidations = Joi.object().keys({
 module.exports = class UsuariosController {
 	static async verifyJWT(req, res, next) {
 		var authorization = req.headers["authorization"];
+		console.log(authorization);
 		if (!authorization) return res.status(401).json({ auth: false, message: "No token provided." });
 
 		const token = authorization.replace("Bearer ", "");
